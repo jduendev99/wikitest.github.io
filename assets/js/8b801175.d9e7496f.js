@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[244],{38314:a=>{a.exports=JSON.parse('{"label":"tamil","permalink":"/wiki/blog/tags/tamil","allTagsPath":"/wiki/blog/tags","count":2,"unlisted":false}')}}]);

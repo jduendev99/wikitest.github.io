@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[408],{79032:s=>{s.exports=JSON.parse('{"label":"bash","permalink":"/wiki/blog/tags/bash","allTagsPath":"/wiki/blog/tags","count":2,"unlisted":false}')}}]);

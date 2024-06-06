@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[8840],{67732:a=>{a.exports=JSON.parse('{"label":"tamizh","permalink":"/wiki/blog/tags/tamizh","allTagsPath":"/wiki/blog/tags","count":2,"unlisted":false}')}}]);

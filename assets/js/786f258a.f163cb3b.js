@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[2988],{60100:i=>{i.exports=JSON.parse('{"label":"git","permalink":"/wiki/blog/tags/git","allTagsPath":"/wiki/blog/tags","count":1,"unlisted":false}')}}]);

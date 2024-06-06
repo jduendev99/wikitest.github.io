@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[8131],{2400:a=>{a.exports=JSON.parse('{"label":"abbreviation","permalink":"/wiki/blog/tags/abbreviation","allTagsPath":"/wiki/blog/tags","count":1,"unlisted":false}')}}]);

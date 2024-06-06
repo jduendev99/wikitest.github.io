@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[5644],{69388:i=>{i.exports=JSON.parse('{"label":"miniconda","permalink":"/wiki/blog/tags/miniconda","allTagsPath":"/wiki/blog/tags","count":1,"unlisted":false}')}}]);

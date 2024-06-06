@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[6060],{77072:e=>{e.exports=JSON.parse('{"label":"riddle","permalink":"/wiki/blog/tags/riddle","allTagsPath":"/wiki/blog/tags","count":1,"unlisted":false}')}}]);
