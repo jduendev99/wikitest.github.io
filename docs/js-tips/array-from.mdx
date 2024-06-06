@@ -1,0 +1,449 @@
+---
+sidebar_position: 2
+sidebar_label: 'Array.from()'
+title: Use cases of Array.from()
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+import Highlight from '@site/src/components/Highlight';
+
+# Amazing use cases of <Highlight color='#C0C0C0'> Array.from()</Highlight> in JavaScript
+
+The <Highlight color='#C0C0C0'> Array.from()</Highlight> method returns an array from any array-like or iterable object. The method takes in one compulsory parameter and two other optional parameters:
+
+```js
+// Syntax
+Array.from(arraylike, mapFunc, thisArg);
+```
+The `from()` method, being a **static method**, is called using the `Array` class name.
+
+* <Highlight color='#C0C0C0'>arraylike</Highlight> - An Array-like or iterable object to convert to an array.
+    * This method can create an array from:
+        * array-like objects - The objects that have length property and have indexed elements like `String`.
+        * Iterable objects like `Map` or `Set`.
+* <Highlight color='#C0C0C0'>mapFunc</Highlight> (optional) - This is an optional parameter. The Map function is called on each element.
+* <Highlight color='#C0C0C0'>thisArg</Highlight> (optional) - This value is used when executing <Highlight color='#C0C0C0'>mapFunc</Highlight> as <Highlight color='#C0C0C0'>this</Highlight>. It is also optional.
+
+:::tip
+`Array.from(obj, mapFunc, thisArg)` is equivalent to `Array.from(obj).map(mapFunc, thisArg)`.
+:::
+
+### `from()` Method with Array-like Objects
+
+To see how this works, let’s create an array from a string using the <Highlight color='#C0C0C0'>Array.from()</Highlight> method:
+
+<Tabs>
+  <TabItem value='array' label='Array.from()' default>
+  ```js
+  // creating an array from a string 
+  Array.from('JavaScript');
+  ```
+  </TabItem>
+  <TabItem value='split' label='JS split()'>
+  ```js
+  // creating an array from a string 
+  'JavaScript'.split('');
+  ```
+  </TabItem>
+  <TabItem value='result' label='Result'>
+  ```js
+  // Output
+  ['J', 'a', 'v', 'a', 'S', 'c', 'r', 'i', 'p', 't']
+  ```
+  </TabItem>
+</Tabs>
+
+In the example above, the <Highlight color='#C0C0C0'>Array.from()</Highlight> method returned an array of the string. You can also use the method to return an array from any object with a length property that specifies the number of elements in the object.
+
+<Tabs>
+  <TabItem value='sample-1' label='Sample 1'>
+  ```js
+  let arrayLike = {0: 5, 1: 7, 2: 1, length: 5};
+  Array.from(arrayLike);
+
+  // Output
+  [5, 7, 1, undefined, undefined]
+  ```
+  </TabItem>
+  <TabItem value='sample-2' label='Sample 2' default>
+  ```js
+  let arrayLike = {0: 5, 1: 7, 2: 1, length: 3};
+  Array.from(arrayLike);
+
+  // Output
+  [5, 7, 1]
+  ```
+  </TabItem>
+  <TabItem value='map-fn' label='With Map fn.'>
+  ```js
+  let arrayLike = {0: 1, 1: 2, 2: 3, length: 3};
+
+  Array.from(arrayLike, val => val * 2);
+  // Output
+  // [2,4,6]
+
+  Array.from(arrayLike, (val, i) => i * 2);
+  // Output
+  // [0,2,4]
+  ```
+  </TabItem>
+</Tabs>
+
+### Sequence of Numbers with the `from()` Method
+
+
+<Tabs>
+  <TabItem value='sample-1' label='Sample 1'>
+  ```js
+  Array.from({ length: 5 }, (value, index) => value);
+
+  // Output
+  [undefined, undefined, undefined, undefined, undefined]
+  ```
+  </TabItem>
+  <TabItem value='sample-2' label='Sample 2'>
+  ```js
+  Array.from({ length: 5 }, (value, index) => index);
+
+  // Output
+  [0, 1, 2, 3, 4]
+  ```
+  </TabItem>
+  <TabItem value='sample-3' label='Sequence from 1' default>
+  ```js
+  Array.from({ length: 5 }, (_, i) => i+1);
+
+  // Output
+  [1, 2, 3, 4, 5]
+  ```
+  </TabItem>
+  <TabItem value='sample-4' label='Traditional' default>
+  ```js
+  const numberCount = [];
+
+  for( let i=0; i < 5; i++) {
+    numberCount.push(i + 1);
+  }
+  console.log(numberCount);
+  
+  // Output
+  [1, 2, 3, 4, 5 ]
+  ```
+  </TabItem>
+</Tabs>
+
+### Create a Range of Numbers with the `from()` Method
+
+```js showLineNumbers
+const arrayRange = (start, stop, step) =>
+    Array.from(
+    { length: (stop - start) / step + 1 },
+    (value, index) => start + index * step
+    );
+```
+
+Let's try the method with a few examples:
+
+```js showLineNumbers
+// Generate numbers between range 2 and 7
+let range = arrayRange(2, 7, 1);
+console.log(range); // [2,3,4,5,6,7]
+
+// Generate even numbers between range 2 and 7
+let evenRange = arrayRange(2, 7, 2);
+console.log(evenRange); // [2,4,6]
+
+// Generate odd numbers between range 1 and 5
+let oddRange = arrayRange(1, 5, 2);
+console.log(oddRange); // [1,3,5]
+```
+
+### `from()` Method with Mapping Function
+
+```js
+Array.from([2,4,6], e => e + 2);
+// Output
+[4, 6, 8]
+```
+
+<Tabs>
+  <TabItem value="map-fn" label="mapFn as arg" default>
+  ```js
+  Array.from([2,4,6], e => e + 2);
+  // Output
+  [4, 6, 8]
+  ```
+  </TabItem>
+  <TabItem value="array-map" label="Array with mapFn">
+  ```js
+  Array.from([2,4,6]).map(e => e + 2);
+  // Output
+  [4, 6, 8]
+  ```
+  </TabItem>
+</Tabs>
+
+### `from()` Method with a `Set` - creating unique array elements
+
+```js
+let myArray = ['apple', 'bird', 'apple', 'chicken', 'egg', 'apple'];
+let setArray = new Set(myArray);
+// Set(4) {'apple', 'bird', 'chicken', 'egg'}
+
+Array.from(setArray);
+// ['apple', 'bird', 'chicken', 'egg']  
+```
+
+### Creating a Matrix
+
+<Tabs>
+  <TabItem value="default-val" label="With Default value" default>
+  ```js
+  let defaultValue = 0;
+  Array.from({ length: 3 }, () => Array.from({ length: 3 }, () => defaultValue ));
+  // Output: 
+  [ [ 0, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ] ]
+  ```
+  </TabItem>
+  <TabItem value="inc-order" label="inc. order">
+  ```js
+  Array.from({ length: 3 }, () => Array.from({ length: 3 }, (_, i) => i + 1));
+  // Output: 
+  [ [ 1, 2, 3 ], [ 1, 2, 3 ], [ 1, 2, 3 ] ]
+  ```
+  </TabItem>
+</Tabs>
+
+### Mapping object properties into arrays
+
+<Tabs>
+  <TabItem value="obj-val" label="Object value" default>
+  ```js
+  const user = { name: 'Ram', age: 23, city: 'Chennai' };
+  Array.from( Object.values(user) );
+  // Output
+  // Object.values(user); will also return the same below output. 
+  // Array.from() is not necessary here 
+  [ 'Ram', 23, 'Chennai' ]
+  ```
+  </TabItem>
+  <TabItem value="obj-key" label="Object key">
+  ```js
+  const user = { name: 'Ram', age: 23, city: 'Chennai' };
+  Array.from( Object.keys(user) );
+  // Output
+  [ 'name', 'age', 'city' ]
+  ```
+  </TabItem>
+</Tabs>
+
+### Using Array.from() in JavaScript with a `this` Value
+
+<Tabs>
+  <TabItem value="sample-1" label="Sample 1" default>
+  ```js showLineNumbers
+  let doubler = {
+    factor: 2,
+    double(x) {
+      // highlight-next-line
+      return x * this.factor;
+      // `this` ref. to `doubler`
+    }
+  };
+
+  let scores = [5, 6, 7];
+
+  Array.from(scores, doubler.double, doubler);
+  // 3rd arg. `doubler` will help fetch `factor`
+
+  // Output
+  [10, 12, 14]
+  ```
+  </TabItem>
+  <TabItem value="sample-2" label="Sample 2" default>
+  ```js showLineNumbers
+  let doubler = {
+    factor: 2,
+    double(x) {
+      // highlight-next-line
+      return x * 2;
+    }
+  };
+
+  let scores = [5, 6, 7];
+
+  Array.from(scores, doubler.double);
+
+  // Output
+  [10, 12, 14]
+  ```
+  </TabItem>
+  <TabItem value="sample-3" label="Sample 3">
+  ```js showLineNumbers
+  function double(x) {
+    // highlight-next-line
+    return x * 2;
+  }
+
+  let scores = [5, 6, 7];
+
+  Array.from(scores, double);
+
+  // Output
+  [10, 12, 14] 
+  ```
+  </TabItem>
+</Tabs>
+
+### Array from an Iterable Object
+
+We can generate an array from any object that has a `[symbol.iterator]` attribute because it also operates on iterable objects.
+
+```js showLineNumbers
+let even = {
+  *[Symbol.iterator]() {
+    for (let i = 0; i < 10; i += 2) {
+      yield i;
+    }
+  }
+};
+
+Array.from(even);
+
+// Output
+[0, 2, 4, 6, 8]
+```
+
+### Map to an Array in JavaScript
+
+<Tabs>
+  <TabItem value="sample-1" label="Sample 1" default>
+  ```js showLineNumbers
+  const map = new Map();
+  map.set('user1', 'John');
+  map.set('user2', 'Mottu');
+  map.set('user3', 'Patlu');
+
+  Array.from(map);
+  // we can use spread operator also as below
+  [...map];
+
+  // Output
+  [ 
+    ['user1', 'John'], 
+    ['user2', 'Mottu'], 
+    ['user3', 'Patlu'] 
+  ]
+
+  Array.from(map.values());
+  // Output
+  ['John', 'Mottu', 'Patlu']
+  ```
+  </TabItem>
+  <TabItem value="sample-2" label="Sample 2">
+  ```js showLineNumbers
+  const map = new Map();
+  map.set('user1', 'John');
+  map.set('user2', 'Mottu');
+  map.set('user3', 'Patlu');
+
+  // highlight-start
+  Array.from(map, (el) => {
+    return { key: el[0], value: el[1] };
+  });
+  // highlight-end
+
+  // We can use array destructuring to shorten the code above:
+  // highlight-start
+  Array.from(map, ([key, value]) => ({
+    key,
+    value,
+  }));
+  // highlight-end
+
+  // Output
+  [
+    { key: 'user1', value: 'John' },
+    { key: 'user2', value: 'Mottu' },
+    { key: 'user3', value: 'Patlu' }
+  ]
+  ```
+  </TabItem>
+  <TabItem value="sample-3" label="Sample 3">
+  ```js showLineNumbers
+  const map = new Map();
+  map.set('user1', 'John');
+  map.set('user2', 'Mottu');
+  map.set('user3', 'Patlu');
+
+  // Map to an array of key-value objects
+  // highlight-start
+  Array.from(map, ([key, value]) => ({
+    [key]: value,
+  }));
+  // highlight-end
+
+  // Output
+  [
+    {user1: 'John'},
+    {user2: 'Mottu'},
+    {user3: 'Patlu'}
+  ]
+  ```
+  </TabItem>
+</Tabs>
+
+### NodeList & HTMLCollection into an Array
+
+<Tabs>
+  <TabItem value="html" label="Html">
+  ```html
+  <body>
+    <p class="my-para">Hello world</p> 
+    <p class="my-para">Hello Folks</p> 
+    <p class="my-para">Hello budies</p> 
+    <p class="my-para">Hello Man</p> 
+  </body>
+  ```
+  </TabItem>
+  <TabItem value="js-part" label="JS" default>
+  ```js showLineNumbers
+  // highlight-next-line
+  const htmlCollectionz = document.getElementsByClassName('my-para');
+  // HTMLCollection(4) [p.my-para, p.my-para, p.my-para, p.my-para]
+
+  // highlight-next-line
+  const nodeList = document.querySelectorAll('.my-para');
+  // NodeList(4) [p.my-para, p.my-para, p.my-para, p.my-para]
+
+  // converting into Array
+  // highlight-start
+  const myArray = Array.from(nodeList);
+  Array.from(htmlCollectionz);
+  [...nodeList];
+  [...htmlCollectionz];
+  // highlight-end
+
+  // Output
+  [p.my-para, p.my-para, p.my-para, p.my-para]
+
+  myArray.forEach((el) => {
+    // Do something with the element
+  });
+  ```
+  </TabItem>
+</Tabs>
+
+`getElementsByClassName()` and `querySelectorAll()` are not arrays. They're **array-like objects** called an `HTMLCollection` and `NodeList` respectively. This means that it has some of the same properties and methods as an array, but it is not a true array.
+
+**One difference** between an HTMLCollection (NodeList) and an array is that an HTMLCollection (NodeList) does not have a `forEach()` method. So If you need to iterate over the elements in an HTMLCollection (NodeList), you can use a `for loop` or convert into array using `Array.from()`
+
+<Highlight color='#25c2a0'> HTMLCollection vs NodeList</Highlight>: If you want a **live collection** that automatically updates when there's a change in the document, then you should use an <Highlight color='#C0C0C0'>HTMLCollection</Highlight>. But if you prefer a **static collection** that doesn't update with a change in the document, then you should use a <Highlight color='#C0C0C0'>NodeList</Highlight>. 
+
+* [HTMLCollection vs NodeList - What's the Difference?](https://www.freecodecamp.org/news/dom-manipulation-htmlcollection-vs-nodelist/)
+* [A comprehensive dive into NodeLists, Arrays, converting NodeLists and understanding the DOM](https://ultimatecourses.com/blog/a-comprehensive-dive-into-nodelists-arrays-converting-nodelists-and-understanding-the-dom)
+* [7 Amazing use cases of Array.from() method in JavaScript](https://dev.to/subaash_b/7-amazing-use-cases-of-arrayfrom-method-in-javascript-50l)
+* [JavaScript Array from() Method](https://www.prepbytes.com/blog/javascript/javascript-array-from-method/)
+* [How to Convert a Map to an Array in JavaScript](https://www.codingbeautydev.com/blog/javascript-convert-map-to-array)

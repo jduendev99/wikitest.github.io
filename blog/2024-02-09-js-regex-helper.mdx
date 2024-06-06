@@ -1,0 +1,286 @@
+---
+slug: js-regex-helper
+title: JS Regex Helper
+authors: anand-tech
+description: Regex - short Regular Expression
+tags: [regex]
+---
+
+import Highlight from '@site/src/components/Highlight';
+
+A <Highlight color='#25c2a0'> regular expression </Highlight>, also known as <Highlight color='#1877F2'> regex </Highlight> or <Highlight color='#1877F2'> regexp </Highlight>, is a sequence of characters that define a search pattern. It can be used to search, edit, or manipulate text and data.
+
+In JavaScript, regular expressions are created using the <Highlight color='#ff1b68'> RegExp object </Highlight>. The RegExp object has a number of methods that can be used to search for and manipulate strings.
+
+Here are some examples of regular expressions in JavaScript:
+
+```js showLineNumbers
+// Find all occurrences of the letter "a" in a string
+const regex = /a/g;
+const string = "This is a string.";
+const matches = regex.exec(string);
+
+// Replace all occurrences of the letter "a" with the letter "e" in a string
+const regex = /a/g;
+const string = "This is a string.";
+const newString = string.replace(regex, "e");
+
+// Check if a string contains a particular pattern
+const regex = /^abc/g;
+const string = "abc123";
+const match = regex.test(string);
+```
+
+<!--truncate-->
+
+
+> <Highlight color='#25c2a0'> Regex </Highlight> short Regular Expression
+
+### 1. General view
+
+  - Expressions need to be surrounded by forward slashes - Eg. `/expression/`
+
+### 2. Modes or Flags in regex
+
+  - Standard - `/expression/`
+  - Case-insensitive - `/expression/i`
+
+    - With this flag the search is case-insensitive: no difference between **A** and **a**
+
+  - Dot-matches-all - `/expression/s`
+
+    - Enables **dotall** mode, that allows a dot `.` to match newline character `\n`
+
+    - By default, a dot doesn’t match the newline character `\n`.
+
+    - For instance, the regexp `A.B` matches A, and then B with any character between them, except a newline `\n`
+
+    ```js
+    alert('A\nB'.match(/A.B/)); // null (no match)
+    ```
+
+    - There are many situations when we’d like a dot to mean literally **any character**, newline included.
+
+    - That’s what flag `s` does. If a regexp has it, then a dot `.` matches literally any character:
+
+    ```js
+    alert('A\nB'.match(/A.B/s)); // A\nB (match!)
+    ```
+
+  - Multiline - `/expression/m`
+  - Global - `/expression/g`
+    - With this flag the search looks for all matches, without it – only the first match is returned
+
+### 3. Metacharacters
+
+* They're characters with special meaning the most common metacharacters we use in expressions are `. + - * $ {} () [] ! : = ^ | `
+
+  - Escaping Metacharacters:
+
+    - Sometmes we need to escape our symbols if they look the same as the text we want to find,
+    - for example, As you can see here `/4.500/ ` these match will cause issues if we need to find `4.500` since the dot its the wildecard but what we need is the literal dot, we need to do something like the below.
+
+    - `/4\.500/` we use a back slash here to escape the wildcard making it a literal character now, meaning its just a dot.
+
+### 4. Range sets
+
+  - `[A-Z]` matches any uppercase character from A to Z
+
+  - `[a-z]` matches any lowercase character from A to Z
+
+  - `[0-9]` matches any digit character from 0 to 9
+
+  - `[A-Za-z0-9]` we can also combine them
+  - `/au[acdt]o/` matches `auto` - third character should be either one from the set `[acdt]`
+
+### 5. Negative sets
+
+  - `[^abc]` match anything except `abc` or what is after the caret inside the brackets. We are still matching one character here, not group of all character.
+
+### 6. Shorthand for sets
+
+  | **Code** | **Description**                                             | **Equivalent** |
+  | :------: | :---------------------------------------------------------- | :------------- |
+  |    \d    | Digit                                                       | [0-9]          |
+  |    \D    | Non digit                                                   | [^0-9]         |
+  |    \s    | Any tab carriage return or new line                         | [ \t\r\n]      |
+  |    \S    | No whitespace of any kind                                   | [^ \t\r\n]     |
+  |    \w    | Word characters including underscore & digits, NO Hyphen(-) | [_A-Za-z0-9]   |
+  |    \W    | No word characters                                          | [ ^_A-Za-z0-9] |
+
+  - `/\w\w\w/` matches 123, abc, and \_1Z (i.e, 3 word characters)
+
+  - `/\d\d\d/` matches 123 bot not car (i.e, 3 digits)
+
+### 7. Repetition Metacharacters
+
+  | Quantifier | Description                                                              |
+  | :--------: | :----------------------------------------------------------------------- |
+  |     `\*`   | Matches the previous element zero or more times.                         |
+  |     `+`    | Matches the previous element one or more times.                          |
+  |     `?`    | Matches the previous element zero or one time.                           |
+  |    `{n}`   | Matches the previous element exactly n times.                            |
+  |    `{n,}`  | Matches the previous element at least n times.                           |
+  |   `{n,m}`  | Matches the previous element at least n times, but no more than m times. |
+
+  - `/cars*/` - matches car, cars and carsssssssssss and many more
+  - `/\d\d\d*/` - matches two digits or more (remember this is starts from zero to more)
+  - `/cars+/` - does not match car since it needs to be more more than 1 character ,E.G, cars or carsssssssssss
+  - `/\d\d\d+/` - matches three digits or more (remember this is starts from 1 to more)
+  - `/cars?/` - the (s) its optional meaning it matches car and cars not carssssssss
+
+    - `/\d{1}/` - matches 1 single digits
+    - `/\d{1,}/` - matches 1 or more digits
+    - `/\d{1,2}/` - matches 1 to 2 digits
+
+### 8. Greedy Expression vs Lazy
+
+  - Greedy `\w+\d+\w+` it maches `file1_export` from `file1_export.sql` since it tries to math as much as possible
+  - Lazy `\w+\d+\w+?` , this matches `file1_` from `file1_export.sql` why is gives up when it find the first word character at the end. (Notice we have a question mark at the end of the w "?" )
+  - You can use the lazy format in these quantifiers `_, +. {} ?`, you would have something likes this `_?, +?, {}?, ??`
+
+### 9. Grouping & Alternation
+
+  - Grouping:
+
+    - `/(cde)+/` matches `cde` and `cdecdecdecde`
+    - `/(super)?market/` matches `market` and `supermarket`
+    - `(super)market` matches `supermarket`
+
+  - Alternation
+
+    - `super|market` matches `super` or `market`
+    - `super(market|bowl)` matches `supermarket` or `superbowl`
+    - `\(12|ab|#%){8}\` this matches `12ab#%12ab#%12ab`
+      The code above might seen confusing but was happening is that the sets of characters are repeating until they reach eight times in sets of two. Notice we are wrapping the symbols in parenthesis, basically groping then and then applying the quantifier.
+
+### 10. Anchors
+
+    | Metacharacter | Description                                                                                  |
+    | :-----------: | :------------------------------------------------------------------------------------------- |
+    |       ^       | The match must start at the beginning of the string or line.                                 |
+    |       $       | The match must occur at the end of the string or before \n at the end of the line or string. |
+    |      \A       | The match must occur at the start of the string.                                             |
+    |      \Z       | The match must occur at the end of the string or before \n at the end of the string          |
+
+    - `\A` and `\Z` are supported by PHP, Python, Perl, Java and .NET . Maybe other engines will start supporting it the future.
+
+    - the` ^` and `$` support `multiline mode`, meaning they can match not just then end of string but the end of lines. With `\A` and `\Z` you cannot do that.
+      - `/^\./ ` this matches the first dot on `.car.`
+      - `/\.$/` this matches the last dot on `.car. `
+
+### 11. Boundaries
+
+    - `\b\w+\b` matches `my car is black`, this will be default behavior without `\b` in this case, so every beginning and end of the word is matched.
+
+    - `\B\w+\B` matches `a` from `car` and `lack` from `black`, so letters that are NOT the beginning or end of words are matched here.
+
+### 12. Backreferences 
+Grouped expressions that are capture for later usage
+
+    - `/super(market)/` matches `supermarket` and stores `market`. So if we wanted to use this store value we would use numbers from 1-9 for example `\1`.
+
+      - `super(market) \1` matches `supermarket market` -> `\1` means `market` here.
+      - `super(market) \1 super(bowl) \2` matches `supermarket market superbowl bowl`
+      - As you can see we are using the numbers from left to right in order to use the data stored int the parenthesis.
+      - since capturing happens by default it will eat up the spaces 1-9 that we have, and can slow down our app, to turn this off we just use question mark followed by a colon in the parenthesis like so.. `super(?:market) `
+
+      ```js showLineNumbers
+      let phrase = 'Anand Raja';
+      let pattern = /(\w+)\s(\w+)/;
+
+      let newPhrase = phrase.replace(pattern, '$1');
+      console.log('First: ' + newPhrase);
+      // Output will be first parenthesis's data
+      // First: Anand
+
+      newPhrase = phrase.replace(pattern, '$2');
+      console.log('Second: ' + newPhrase);
+      // Output will be second parenthesis's data
+      // Second: Raja
+
+      pattern = /(?:\w+)\s(\w+)/;
+      newPhrase = phrase.replace(pattern, '$1');
+      console.log('Third: ' + newPhrase);
+      // Output will be second parenthesis's data as we're turning off capturing for first parenthesis
+      // Third: Raja
+
+      pattern = /(\w+)\s(\w+)\s\1/;
+      phrase = `love is love`; // \1 denotes love
+      newPhrase = phrase.replace(pattern, '$1');
+      console.log('Fourth: ' + newPhrase);
+      // Output will be first parenthesis's data
+      // Fourth: love
+      ```
+
+### 13. Positive & Negative Lookaheads
+
+    - `super(?=market)` if `super` is preceded by `market`, match it, this will match `super`
+      - if `supermarket superbowl` is phrase to be checked, `super` from `supermarket` will only be matched. -> meaning market should be preceded by super(i.e, super with market)
+    - To do the apposite we do this, `super(?!market)`
+      - if `supermarket superbowl` is phrase to be checked, `super` from `superbowl` will only be matched. -> meaning market should not be there after super(i.e, super without market)
+
+### 14. Positive & Negative Lookbehind
+
+    - `(?<=super)market` matches `market` in `supermarket`
+    - `(?<!market)super` matches `super` in `supermarket`
+    - Lookbehind is not supported in non-V8 browsers, such as Safari, Internet Explorer
+
+    - The syntaxes are:
+
+      - Positive lookbehind: `(?<=Y)X`, matches `X`, but only if there’s `Y` before it.
+      - Negative lookbehind: `(?<!Y)X`, matches `X`, but only if there’s no `Y` before it.
+
+### 15. Examples
+
+    - Postal code to choose either 4 or 5 digits in the begining, or along with that dash and another 4 digits at the end (say `34216-6501`)
+
+    ```regex
+      /^\d{4,5}(-\d{4})?$/
+    ```
+
+    - Password with altest one uppercase, lowercase, and one special character from the list (!,@,$,#,-,^,%,&,\*) with min. 8 and max. 13 characters
+
+    ```regex
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@$#\-\^%&*])\S{8,13}$/
+    ```
+
+    - The below regex will match `27-11-1996` or `05/10/2023` or `7-1-1954` or `7-03-1954`. One disadvantage is year can be any 4 digits.
+
+    ```regex
+      /^(0?[1-9]|[1-2][0-9]|3[0-1])[/-](0?[1-9]|1[0-2])[/-]\d{4}$/
+    ```
+
+    - Select all html tags except [a, ul, li, ol]
+
+    ```regex
+      /<(?!\/?(a|ul|li|ol)(?=>|\s?.*>))\/?.*?>/g
+    ```
+
+    - Select all anchor tags(a tag) in html
+
+    ```regex
+      /<a.*?>|<\/a>/g
+    ```
+
+    - How to select all html tags
+
+    ```regex
+      /<[^>]*>/g
+    ```
+
+### Usefull online Regex validator
+
+1. [Regex101](https://regex101.com/)
+2. [Regex Pal](https://www.regexpal.com/)
+3. [Regex Pal github source code](https://github.com/rpayanm/regexpal)
+4. [I hate Regex source code - Vue](https://github.com/geongeorge/i-hate-regex)
+
+### Resources
+
+1. [Regex to validate date formats dd/mm/YYYY, dd-mm-YYYY, dd.mm.YYYY, dd mmm YYYY, dd-mmm-YYYY, dd/mmm/YYYY, dd.mmm.YYYY with Leap Year Support](https://stackoverflow.com/questions/15491894/regex-to-validate-date-formats-dd-mm-yyyy-dd-mm-yyyy-dd-mm-yyyy-dd-mmm-yyyy)
+2. [Javascript info - regex](https://javascript.info/regexp-introduction)
+3. [Learn Regex - github](https://github.com/ziishaned/learn-regex)
+4. [How to Use Regular Expressions in JavaScript – Tutorial for Beginners](https://www.freecodecamp.org/news/regular-expressions-for-beginners/)
+5. [JavaScript Regex - Programiz](https://www.programiz.com/javascript/regex)
+6. [A Guide to Regular Expressions (Regex) in JavaScript](https://builtin.com/software-engineering-perspectives/javascript-regex)

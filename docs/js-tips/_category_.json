@@ -1,0 +1,8 @@
+{
+  "label": "JS Tips",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "Some tricky parts in js"
+  }
+}

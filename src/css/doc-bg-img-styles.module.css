@@ -1,0 +1,13 @@
+.redTab {
+  color: #ff1b68;
+}
+.redTab[aria-selected='true'] {
+  border-bottom-color: #ff1b68;
+}
+
+.purpleTab {
+  color: #800080;
+}
+.purpleTab[aria-selected='true'] {
+  border-bottom-color: #800080;
+}

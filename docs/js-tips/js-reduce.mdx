@@ -1,0 +1,342 @@
+---
+sidebar_position: 4
+sidebar_label: 'JS reduce() in depth'
+title: JavaScript reduce() in depth
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+import Highlight from '@site/src/components/Highlight';
+
+# JavaScript <Highlight color='#C0C0C0'>reduce()</Highlight> in depth
+
+The <Highlight color='#C0C0C0'>reduce()</Highlight> method is an iterative method. It runs a **reducer** callback function over all elements in the array, in **ascending-index order**, and accumulates them into a single value.
+
+```js
+// Syntax
+reduce(callbackFn)
+reduce(callbackFn, initialValue)
+```
+* <Highlight color='#C0C0C0'>callbackFn</Highlight> : A function to execute for each element in the array. Its return value becomes the value of the `accumulator` parameter on the next invocation of `callbackFn`.
+    * <Highlight color='#C0C0C0'>accumulator</Highlight> : The value resulting from the previous call to `callbackFn`. On the first call, its value is `initialValue` if the latter is specified; otherwise its value is `array[0]`.
+    * <Highlight color='#C0C0C0'>currentValue</Highlight> : The value of the current element. On the first call, its value is `array[0]` if `initialValue` is specified; otherwise its value is `array[1]`.
+    * <Highlight color='#C0C0C0'>currentIndex</Highlight> : The index position of `currentValue` in the array. On the first call, its value is `0` if `initialValue` is specified, otherwise `1`.
+    * <Highlight color='#C0C0C0'>array</Highlight> : The array `reduce()` was called upon.
+* <Highlight color='#C0C0C0'>initialValue</Highlight> - Optional : A value to which `accumulator` is initialized the first time the callback is called.
+
+### Working Logic:
+
+<details>
+  <summary>How `reduce()` Work</summary>
+  <div>
+  <Tabs className="unique-tabs">
+    <TabItem value="Without initial value">
+    ```js
+    const array = [15, 16, 17, 18, 19];
+
+    function reducer(accumulator, currentValue, index) {
+      const returns = accumulator + currentValue;
+      console.log(
+        `accumulator: ${accumulator}, currentValue: ${currentValue}, index: ${index}, returns: ${returns}`,
+      );
+      return returns;
+    }
+
+    array.reduce(reducer);
+
+    // Output
+    85
+    ```
+    </TabItem>
+
+    <TabItem value="Detail - w/o initial">
+
+    |             | **accumulator** | **currentValue** | **index** | **Return value** |
+    |-------------|-----------------|------------------|-----------|------------------|
+    | First call  | **15**          | **16**           | **1**     | 31               |
+    | Second call | 31              | **17**           | 2         | 48               |
+    | Third call  | 48              | **18**           | 3         | 66               |
+    | Fourth call | 66              | **19**           | 4         | 85               |
+
+    </TabItem>
+
+    <TabItem value="With initial value">
+    ```js
+    const array = [15, 16, 17, 18, 19];
+
+    array.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      10,
+    );
+
+    // Output
+    95
+    ```
+    </TabItem>
+
+    <TabItem value="Detail - w. initial">
+
+    |             | **accumulator** | **currentValue** | **index** | **Return value** |
+    |-------------|-----------------|------------------|-----------|------------------|
+    | First call  | **10**          | **15**           | **0**     | 25               |
+    | Second call | 25              | **16**           | 1         | 41               |
+    | Third call  | 41              | **17**           | 2         | 58               |
+    | Fourth call | 58              | **18**           | 3         | 76               |
+    | Fifth call  | 76              | **19**           | 4         | 95               |
+
+    </TabItem>
+  </Tabs>
+  </div>
+</details>
+
+### Basic reduction & techniques
+
+<Tabs>
+  <TabItem value="basic" label="Basic Reduction" default>
+  ```js
+  const euros = [29.76, 41.85, 46.5];
+
+  const sum = euros.reduce((total, el) => total + el); 
+
+  sum // 118.11
+  ```
+  </TabItem>
+  <TabItem value="average" label="Average">
+  ```js
+  const euros = [29.76, 41.85, 46.5];
+
+  const average = euros.reduce((total, el, index, array) => {
+    total += el;
+    if( index === array.length-1) { 
+      return total/array.length;
+    }else { 
+      return total;
+    }
+  });
+
+  average // 39.37
+  ```
+  </TabItem>
+  <TabItem value="doubling" label="Doubling">
+```js
+const euros = [29.76, 41.85, 46.5];
+
+const doubled = euros.reduce((total, el) => {
+  total.push(el * 2);
+  return total;
+}, []);
+
+doubled // [59.52, 83.7, 93]
+```
+  </TabItem>
+  <TabItem value="filter" label="Filtering Out">
+```js
+const euro = [29.76, 41.85, 46.5];
+
+const above30 = euro.reduce((total, el) => {
+  if (el > 30) {
+    total.push(el);
+  }
+  return total;
+}, []);
+
+above30 // [ 41.85, 46.5 ]
+```
+  </TabItem>
+</Tabs>
+
+* `initialValue` (say `[]`) will become `total` in the first iteration.
+
+### Creating a Tally with the Reduce Method In JavaScript
+
+We can use the below logic to find how many of each item are in the collection (Frequency of the item in an array).
+
+```js showLineNumbers
+const fruitBasket = ['banana', 'cherry', 'orange', 'apple', 'cherry', 'orange', 'apple', 'banana', 'cherry', 'orange', 'fig' ];
+let max = 0; 
+let maxFruit = '';
+
+const fruitsMap = fruitBasket.reduce( (tally, fruit) => {
+  // highlight-start
+  tally[fruit] = (tally[fruit] || 0) + 1 ;
+  return tally;
+  // highlight-end
+} , {});
+
+console.log(fruitsMap); // { banana: 2, cherry: 3, orange: 3, apple: 2, fig: 1 }
+
+for(let fruit in fruitsMap) {
+  if(fruitsMap[fruit] > max) {
+    // `fruitsMap[fruit]` will return its count from map
+    max = fruitsMap[fruit];
+    maxFruit = fruit;
+  }
+}
+
+console.log(`${maxFruit} - ${max}`); // cherry - 3
+```
+
+* `tally[fruit]` in line number 4 (Right side of =) is similar to `tally.fruit`, where `tally` is object (accumulator)
+* `fruit` is each elements of the array.
+
+#### Break through of the above code:
+
+1. On our first pass, we want the name of the first key to be our current value(banana) and we want to give it a value of 1.
+2. This gives us an object with all the fruit as keys, each with a value of 1. We want the amount of each fruit to increase if they repeat.
+3. To do this, on our second loop we check if our total contain a key with the current fruit of the reducer. If it doesn’t then we create it. If it does then we increment the amount by one.
+
+The above code in simplified form as below:
+
+```js
+fruitBasket.reduce((tally, fruit) => {
+  if (!tally[fruit]) {
+    tally[fruit] = 1;
+  } else {
+    tally[fruit] = tally[fruit] + 1;
+  }
+  return tally;
+}, {});
+```
+
+### Character Frequency
+
+Converting `string` into the object with letters & its frequency
+
+<Tabs>
+  <TabItem value="reduce" label="Using Reduce" default>
+  ```js showLineNumbers
+  const freqMap = str => str.split('').reduce(
+    // highlight-next-line
+    (map, char) => (map[char] ??= 0, map[char]++, map), 
+    {}
+  );
+
+  freqMap('anand');
+
+  // Output
+  {a: 2, n: 2, d: 1}
+  ```
+  </TabItem>
+  <TabItem value="break" label="Break-through">
+  ```js showLineNumbers
+  const freqMap = str => str.split('').reduce(
+    // highlight-next-line
+    (map, char) => (map[char] ??= 0, map[char]++, console.log(map), map), 
+    {}
+  );
+
+  freqMap('anand');
+
+  // Output
+  {a: 1}
+  {a: 1, n: 1}
+  {a: 2, n: 1}
+  {a: 2, n: 2}
+  {a: 2, n: 2, d: 1}
+  ```
+  </TabItem>
+  <TabItem value="for-of" label="Using For-of">
+  ```js showLineNumbers
+  const map = new Map();
+  const str = 'anand'.split(''); // const str = 'anand';
+
+  // highlight-start
+  for (const char of str) {
+    map[char] ??= 0;
+    map[char]++;
+  }
+  // highlight-end
+
+  console.log(map);
+
+  // Output
+  {a: 2, n: 2, d: 1}
+  ```
+  </TabItem>
+  <TabItem value="break-through" label="Break-through">
+  ```js
+  const map = new Map();
+  const str = 'anand';
+
+  // Create a map object and initialize it with the value 0 for each character in the string `str`.
+  for (const char of str) {
+    map[char] ??= 0;
+  }
+
+  console.log(map); // Map(0) {a: 0, n: 0, d: 0, size: 0}
+
+  // Increment the value of the map object for each character in the string `str`.
+  for (const char of str) {
+    map[char]++;
+  }
+
+  console.log(map); // Map(0) {a: 2, n: 2, d: 1, size: 0}
+
+  // Return the map object.
+  console.log(map);
+  ```
+  </TabItem>
+</Tabs>
+
+The `??=` operator in JavaScript is the **nullish coalescing assignment operator**. It is a logical operator that **returns its right-hand side operand** when its **left-hand side operand** is `null` or `undefined`.
+
+```js showLineNumbers
+let x = null;
+x ??= 5;
+console.log(x); // 5
+
+let y = undefined;
+y ??= 10;
+console.log(y); // 10
+
+let z = 15;
+z ??= 20;
+console.log(z); // 15
+```
+
+#### We can see the explanation of the map. at line number 2.
+
+```js
+(map[char] ??= 0, map[char]++, map)
+```
+
+This code is a concise way to increment the value associated with a key in a map. The `??=` operator is called the **nullish coalescing assignment operator**. It checks if the value of `map[char]` is `null` or `undefined`. If it is, then the value of `map[char]` is set to `0`. Otherwise, the value of `map[char]` is left unchanged.
+
+The `++` operator increments the value of `map[char]`. The map variable is returned at the end of the expression.
+
+Here is an example of how to use this code:
+
+```js
+const map = new Map();
+
+// Increment the value associated with the key 'a'
+(map['a'] ??= 0, map['a']++, map);
+
+// Increment the value associated with the key 'b'
+(map['b'] ??= 0, map['b']++, map);
+
+console.log(map); // { 'a': 1, 'b': 1 }
+```
+
+### Flattening an array of arrays
+
+```js
+const data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+
+const flat = data.reduce((total, el) => {
+  return total.concat(el);
+}, []);
+
+flat // [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+```
+
+* Each elements will be concatenated one after one. Our first pass is empty arrya. Then first element ([1, 2, 3]) will be be concatenated to empty array and so on.
+
+### <Highlight color='#C0C0C0'>reduceRight()</Highlight> method
+
+The <Highlight color='#C0C0C0'>reduceRight()</Highlight> method works in the same way as the <Highlight color='#C0C0C0'>reduce()</Highlight> method, **but in the opposite direction**.
+
+The `reduce()` method starts at the first element and travels toward the last, whereas the `reduceRight()` method starts at the last element and travels backward the first.
+
+![image](https://github.com/actionanand/wiki/assets/46064269/6f68243a-d262-44fc-8bc4-de349755ae6f)

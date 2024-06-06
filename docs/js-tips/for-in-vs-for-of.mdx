@@ -1,0 +1,272 @@
+---
+sidebar_position: 6
+sidebar_label: 'for-in vs for-of'
+title: 'for-in vs for-of'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+import Highlight from '@site/src/components/Highlight';
+
+# <Highlight color='#C0C0C0'>for...in</Highlight> vs <Highlight color='#C0C0C0'>for...of</Highlight>
+
+### For In: Loops over the `Keys`.
+<Highlight color='#25c2a0'>for...in</Highlight> works with those properties whose `enumerable` flag is set to true.
+
+* Enumerable flag for properties created via simple assignment or property initializer are by default true.
+* Enumerable flag for properties created via `Object.defineProperty` are by default false.
+
+it's used to iterate over all enumerable properties of an object, including inherited enumerable properties. This iteration statement can be **used with `arrays`, `strings` or `plain objects`**, but **not with `Map` or `Set` objects**.
+
+<Tabs>
+  <TabItem value="syntax" label="Syntax" default>
+  ```js
+  for (key in object) {
+      // body of for...in
+  }
+  ```
+  </TabItem>
+  <TabItem value="sample1" label="Sample 1">
+  ```js
+  const person = { 
+    name: 'Prakash', 
+    age: 29,  
+    gender: 'male', 
+    mark: { value: 45, grade: 'A'} 
+  };
+
+  for (let key in person) {  
+    console.log(key)
+  }
+
+  // Output
+  name
+  age
+  gender
+  mark
+  ```
+  </TabItem>
+  <TabItem value="sample2" label="Sample 2">
+  ```js
+    const person = { 
+      name: 'Prakash', 
+      age: 29,  
+      gender: 'male',
+      mark: { value: 45, grade: 'A'} 
+    };
+
+    Object.defineProperty(person, 'color', { value: 'Green', enumerable: false});
+    Object.defineProperty(person, 'Year', { value: 2024, enumerable: true});
+
+    for (let key in person) {  
+      console.log (key, '=>' , person[key] )
+    }
+
+    // Output
+
+    name => Prakash
+    age => 29
+    gender => male
+    mark => {value: 45, grade: 'A'}
+    Year => 2024
+  ```
+  </TabItem>
+  <TabItem value="sample3" label="Sample 3">
+```js
+for (let prop in ['a', 'b', 'c'])
+  console.log(prop);  // 0, 1, 2 (array indexes)
+
+for (let prop in 'str')
+  console.log(prop);  // 0, 1, 2 (string indexes)
+
+const str = 'anand';
+for (let prop in str)
+  console.log(str[prop]); // 'a', 'n', 'a', 'n', 'd' (characters)
+
+for (let prop in {a: 1, b: 2, c: 3})
+  console.log(prop);  // a, b, c (object property names)
+
+for (let prop in new Set(['a', 'b', 'a', 'd']))
+  console.log(prop);  // undefined (no enumerable properties)
+```
+  </TabItem>
+</Tabs>
+
+### For Of: Loops over the `Values`
+<Highlight color='#25c2a0'>for...of</Highlight> loop works only with **iterable objects**. In JavaScript, iterables are objects which can be looped over.
+
+`String`, `Array`, `TypedArray`, `Map`, and `Set` are all **built-in iterables**, because each of their prototype objects implements an `@@iterator` method. So, `for...of` loop works on the mentioned object types.
+
+`Object` in JavaScript is **not iterable by default**. So, **`for...of` loop does not work on objects**.
+
+In simple words, `for...of` works with `strings` and `arrays` but **not with `objects`**.
+
+#### `for...of` - How it works?
+
+`for...of` is a method, introduced in ES2015, for iterating over **iterable collections**. These are objects that have a `[Symbol.iterator]` property.
+
+The `[Symbol.iterator]` property allows us to manually iterate over the collection by calling the `[Symbol.iterator]().next()` method to retrieve the next item in the collection.
+
+```js
+const myArray = ['a','b','c', 'd'];
+const iterator = myArray[Symbol.iterator]();
+console.log( iterator.next().value )
+console.log( iterator.next().value )
+console.log( iterator.next().value )
+console.log( iterator.next().value )
+
+// Output: a, b, c, d
+```
+
+The `for...of` syntax is essentially a wrapper around the `[Symbol.iterator]` to create loops. It uses the following syntax
+
+```js
+for (value of iterable) {
+	// do stuff
+}
+```
+
+<Tabs>
+  <TabItem value="sample1" label="Sample 1" default>
+  ```js
+  const myMap = new Map([['name', 'Rajesh'], ['mark', 73], ['school', 'G.H.S, School']]);
+
+  for (let val of myMap)
+    console.log(val);
+  /*
+  // Output
+    ['name', 'Rajesh']
+    ['mark', 73]
+    ['school', 'G.H.S, School']
+  */
+
+  for (let [key, val] of myMap)
+    console.log(key +': '+ val);
+
+  // Output
+  name: Rajesh
+  mark: 73
+  school: G.H.S, School
+  ```
+  </TabItem>
+  <TabItem value="sample2" label="Sample 2">
+  ```js
+  for (let val of ['a', 'b', 'c'])
+    console.log(val); // a, b, c (array values)
+
+  for (let val of 'str')
+    console.log(val); // s, t, r (string characters)
+
+  for (let val of {a: 1, b: 2, c: 3})
+    console.log(prop);  // TypeError (not iterable)
+
+  for (let val of new Set(['a', 'b', 'a', 'd']))
+    console.log(val); // a, b, d (Set values)
+  ```
+  </TabItem>
+  <TabItem value="sample3" label="Sample 3">
+  ```js
+  // creating iterable object
+  const iterableObj = {
+
+    // iterator method
+    [Symbol.iterator]() {
+      let step = 0;
+      return {
+        next() {
+          step++;
+          if (step === 1) {
+            return { value: '1', done: false};
+            }
+          else if (step === 2) {
+            return { value: '2', done: false};
+          }
+          else if (step === 3) {
+            return { value: '3', done: false};
+          }
+          return { value: '', done: true };
+        }
+      }
+    }
+  }
+
+  // iterating using for...of
+  for (const i of iterableObj) {
+  console.log(i);
+  }
+
+  // Output
+  1
+  2
+  3
+  ```
+  </TabItem>
+  <TabItem value="sample 4" label="Sample 4">
+```js
+function * even(n) {  
+  let index = 0;
+
+  while (index <= n ) {  
+    yield index;
+    index += 2;
+  }
+}
+
+const evenGenerator = even(6);
+
+for (let i of evenGenerator ) 
+  console.log(i);
+
+// Output
+0
+2
+4
+6
+```
+  </TabItem>
+</Tabs>
+
+#### `for...of` and NodeLists
+
+Finally, another really useful case for `for...of` is in iterating of `NodeLists`. When we query the document for a group of elements, what we get returned is a NodeList, not an Array. This means that we **can't iterate** over the list using Array methods like `forEach`.
+
+To solve this, we can either convert it to an Array using `Array.from()`, or use the `for...of loop`, which is applicable to more than just Arrays and array-like object.
+
+```js
+const elements = document.querySelectorAll('.foo');
+
+for (const el of elements) {
+    el.addEventListener('click', doSomething);
+}
+```
+
+### Bonus - `forEach` 
+
+<Tabs>
+  <TabItem value="sample1" label="Sample 1" default>
+  ```js
+  const arr = ['B', 'a', 'b', 'e'];
+  arr.forEach(el => console.log(el));
+
+  // Output
+  'B'
+  'a'
+  'b'
+  'e'
+  ```
+  </TabItem>
+  <TabItem value="sample2" label="Sample 2">
+```js
+const arr = ['B', 'a', 'b', 'e', 'l'];
+arr.forEach((el, i, array) => console.log(el, i, array));
+
+// Output
+'B' 0 ['B', 'a', 'b', 'e', 'l']
+'a' 1 ['B', 'a', 'b', 'e', 'l']
+'b' 2 ['B', 'a', 'b', 'e', 'l']
+'e' 3 ['B', 'a', 'b', 'e', 'l']
+'l' 4 ['B', 'a', 'b', 'e', 'l']
+```
+  </TabItem>
+</Tabs>
